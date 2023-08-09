@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Note Card</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+	<div class="grid">
+		
+		<div class="block" id="pageHeader">HEADER</div>
+		
+		<div class="areaForData" id="dataArea">
+			<h2>Карточка заметки</h2>
+			<table border="2" cellpadding="5">
+				<tr>
+					<th align="right">Id</th>
+					<td th:text="${note.getId()}">
+				</tr>
+				<tr>
+					<th align="right">Название</th>
+					<td th:text="${note.getName()}">
+				</tr>
+				<tr>
+					<th align="right">Описание</th>
+					<td>
+						<textarea disabled rows="4" cols="50" 
+									th:text="${note.getDescription()}"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<th align="right">Статус</th>
+					<td th:text="${note.getIsDeleted()} ? 'удалена' : 'активна'">
+				</tr>
+				<tr>
+					<th align="right">Дата создания</th>
+					<td th:text="${#temporals.format(note.getCreatedAt(),  'dd-MM-yyyy HH:mm')}">
+				</tr>
+				<tr>
+					<th align="right">Дата изменения</th>
+					<td th:if="${note.getUpdatedAt()} != null" 
+						th:text="${#temporals.format(note.getUpdatedAt(),  'dd-MM-yyyy HH:mm')}">
+					<td th:if="${note.getUpdatedAt()} == null" 
+						th:text="'не изменялась'">
+				</tr>
+				<tr>
+					<td align="right" colspan="2"> 
+						<a th:href="@{/notes-list}">Вернуться</a> </td>
+				</tr>
+			</table>
+		</div>
+		
+		<div class="block" id="serviceArea">SERVICE
+			<br><br><b><a th:href="@{/notes-list}">Вернуться в заметки ...</a></b>
+		</div>
+		
+		<div class="block" id="pageFooter">FOOTER</div>
+		
+	</div>
+</body>
+
+</html>

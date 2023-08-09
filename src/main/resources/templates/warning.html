@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>My Notes Project</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+	<div class="grid">
+		
+		<div class="block" id="pageHeader">HEADER</div>
+		
+		<div class="areaForMessages" id="dataArea">
+			<h2 style="color: red; font-size: 125%">
+				Нельзя удалить заметку с активным статусом! 
+				<a style="color: red;" th:href="@{/notes-list}">Вернитесь</a> 
+				и измените статус заметки!</h2>
+		</div>
+		
+		<div class="block" id="serviceArea">SERVICE
+			<br><br><b><a th:href="@{/notes-list}">Перейти в заметки ...</a></b>
+		</div>
+		
+		<div class="block" id="pageFooter">FOOTER</div>
+		
+	</div>
+</body>
+
+</html>

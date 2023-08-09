@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Notes List (manually created REST API)</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+	<div class="grid">
+		
+		<div class="block" id="pageHeader">HEADER</div>
+		
+		<div class="areaForData" id="dataArea"
+				th:switch="${notes.isEmpty()}">
+			<h2>Список заметок</h2>
+			
+			<div style="display: table;">
+				<div style="display: table-cell; width: 35%;">
+					<form th:method="get" th:action="@{/notes-list/new}">
+						<button>Создать заметку</button>
+					</form>
+				</div>
+				
+				<div style="display: table-cell; width: 20%;">
+					<form style="display: table;" th:object="${props}" 
+							th:method="get" 
+							th:action="@{/notes-list/filter}">
+						<button style=" margin-right: 20px;" 
+							th:text="*{isFiltering}? 'Выключить фильтр' : 'Включить фильтр'"></button>
+					</form>
+				</div>
+				
+				<div style="display: table-cell;">
+					<form style="display: table;" th:object="${props}" 
+							th:method="get" 
+							th:action="@{/notes-list/query}">
+						
+						<label for="value">Искать по значению:</label>
+						<input th:if="*{!isFiltering}" readonly class="readonlyField"
+								type="text" name="value" id="value" th:value="*{filteringValueUI}" 
+								style="display: table-cell; margin-left: 10px; margin-right: 10px;">
+						<input th:if="*{isFiltering}" 
+								type="text" name="value" id="value" th:value="*{filteringValueUI}" 
+								style="display: table-cell; margin-left: 10px; margin-right: 10px;">
+						
+						<button th:if="*{!isFiltering}" readonly disabled
+								style="display: table-cell; margin-left: 10px;">Отфильтровать</button>
+						<button th:if="*{isFiltering}" 
+								style="display: table-cell; margin-left: 10px;">Отфильтровать</button>
+					</form>		
+				</div>
+			</div>			
+			
+			<div th:case="true">
+				<br><hr>
+        		<h2  style="color: red; font-size: 125%" 
+        			th:text="'Ни одной заметки не найдено!'">text</h2>
+        		<table class="scroll-table" border="2" cellpadding="5"></table>
+			</div>
+			
+			<div th:case="false">
+				<br><hr>
+        		<h2  style="color: red; font-size: 125%" 
+        			th:text="'Всего найдено ' + ${notes.size()} + ' заметок:'">text</h2>
+        		
+        		<table class="scroll-table" border="2" cellpadding="5">
+					<tr>
+						<th>Id</th>
+						<th>Название</th>
+						<th>Статус</th>
+						<th>Cоздана</th>
+						<th>Изменена</th>
+						<th colspan="4">Операции со списком</th>
+					</tr>
+					<tr th:each="note : ${notes}">
+						<td th:text="${note.getId()}">
+						<td th:text="${note.getName()} == null ? 
+											${note.getName()} : 
+											(${note.getName().length()} > 15 ? 
+													${note.getName().substring(0, 12)} + '...' : 
+													${note.getName()})">
+						<td th:text="${note.getIsDeleted()} ? 'удалена' : 'активна'">
+						<td th:text="${#temporals.format(note.getCreatedAt(),  'dd-MM-yyyy HH:mm')}">
+						<td th:text="${#temporals.format(note.getUpdatedAt(),  'dd-MM-yyyy HH:mm')}">
+						<td> 
+							<a th:href="@{/notes-list/{id}(id=${note.getId()})}">Открыть</a>
+						</td>
+						<td>
+							<a th:href="@{/notes-list/{id}/edit(id=${note.getId()})}">Изменить</a>
+						</td>
+						<td>
+							<a th:href="@{/notes-list/{id}/status(id=${note.getId()})}">Статус</a>
+						</td>
+						<td>
+							<a th:href="@{/notes-list/{id}/delete(id=${note.getId()})}">Удалить</a>
+						</td>
+					</tr>
+				</table>
+        		
+			</div>
+			
+			<div style="display: table;">
+				<div th:if="${!props.isPaging}" style="display: table-cell; width: 88%;">
+					<br><a th:href="@{/notes-list/paging}" th:text="'постранично'">text</a>
+					<span style="padding-left: 10px; color: darkblue;">
+						(для управления постраничным отображением перейдите <b>по ссылке слева</b>)</span>
+				</div>
+				
+				<div th:if="${props.isPaging}" style="display: table-cell; width: 88%;">
+					<br>
+					<form style="display: table;" th:object="${props}" 
+							th:method="post" th:action="@{/notes-list/change-page-size}">
+						<a style="display: table-cell;" 
+							th:href="@{/notes-list/paging}"
+							th:text="'без страниц'">text</a>
+						
+						<div style="display: table-cell;" >
+							<input style="margin-left: 10px; margin-right: 10px; width: 25px;" 
+									type="text" th:field="*{pageSize}">
+						</div>
+					
+						<button type="submit" style="display: table-cell;">Изменить страницу</button>
+						
+						<a style="display: table-cell; padding-left: 10px;" 
+							th:href="@{/notes-list/first}"
+							th:text="'<<---'">text</a>
+						
+						<a style="display: table-cell; padding-left: 10px;" 
+							th:href="@{/notes-list/prev}"
+							th:text="'<---'">text</a>
+						
+						<span style="display: table-cell; padding-left: 10px; padding-right: 10px;" 
+								th:text="*{curPage} + 1">text</span>
+						
+						<a style="display: table-cell; padding-right: 10px;" 
+							th:href="@{/notes-list/next}"
+							th:text="'--->'">text</a>
+						
+						<a style="display: table-cell;" 
+							th:href="@{/notes-list/last}"
+							th:text="'--->>'">text</a>
+					</form>
+				</div>
+				
+				<div style="display: table-cell">
+					<br>
+					<form th:method="get" th:action="@{/notes-list/export-to-pdf}">
+						<button>Экспорт в PDF</button>
+					</form>
+				</div>
+			</div>
+			
+			
+		</div>
+		
+		<div class="block" id="serviceArea">SERVICE
+			<br><br><b><a th:href="@{/}">Вернуться на домашнюю страницу ...</a></b>
+		</div>
+		
+		<div class="block" id="pageFooter">FOOTER</div>
+		
+	</div>
+</body>
+
+</html>

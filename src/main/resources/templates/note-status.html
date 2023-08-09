@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Change Note's Status</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+	<div class="grid">
+		
+		<div class="block" id="pageHeader">HEADER</div>
+		
+		<div class="areaForData" id="dataArea">
+			<h2>Изменение статуса заметки</h2>
+			
+			<form th:method="patch" th:action="@{/notes-list/status}" th:object="${note}">
+				<!-- <input type="hidden" name="_csrf" th:value="${_csrf.token}"> -->
+				
+				<label for="name">Id........................:</label>
+				<input class="readonlyField" readonly type="text" th:field="*{id}">
+				<br><br>
+				
+				<label for="name">Название............:</label>
+				<input class="readonlyField" readonly type="text" th:field="*{name}">
+				<br><br>
+				
+				<label for="type">Описание...........:</label>
+				<input class="readonlyField" readonly type="text" th:field="*{description}">
+				<br><br>
+				
+				<label for="type">Статус................:</label>
+				<input type="checkbox" th:field="*{isDeleted}">
+				<span style="padding-left: 10px; color: darkblue;">
+					(включенный статус означает логическое удаление записи)</span>
+				<br><br>
+				
+				<label for="type">Дата создания...:</label>
+				<input class="readonlyField" readonly type="text" th:field="*{createdAt}">
+				<br><br>
+				
+				<label for="type">Дата изменения.:</label>
+				<input class="readonlyField" readonly type="text" th:field="*{updatedAt}">
+				<br><br>
+				
+				<button>Изменить статус</button>
+			</form>
+		</div>
+		
+		<div class="block" id="serviceArea">SERVICE
+			<br><br><b><a th:href="@{/notes-list}">Вернуться в заметки ...</a></b>
+		</div>
+		
+		<div class="block" id="pageFooter">FOOTER</div>
+		
+	</div>
+</body>
+
+</html>

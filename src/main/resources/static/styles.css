@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+.grid {
+	display: grid;
+	grid-template-areas:
+	"A A"
+	"B C"
+	"D D";
+	grid-template-rows: 10% 1fr 10%;
+	grid-template-columns: 75% 1fr;
+	grid-gap: 10px;
+	height: 98vh;
+}
+
+.block {
+	padding: 10px;
+	background: rgb(192, 192, 192);
+}
+
+.blockCenter {
+	padding: 10px;
+	background: rgb(192, 192, 192);
+	display: flex;
+	align-items: center; 		/* центрирование по вертикали */
+	justify-content: center;	/* центрирование по горизонтали */
+}
+
+.areaForData {
+	padding-left: 10px;
+	padding-right: 10px;
+	background: #ffffc8;
+}
+.areaForData > h2 {
+	margin: 2% 0% 2% 0%;
+}
+.areaForMessages {
+	padding-left: 10px;
+	padding-right: 10px;
+	background: white;
+	display: flex;
+	align-items: center; 		/* центрирование по вертикали */
+	justify-content: center;	/* центрирование по горизонтали */
+}
+
+.scroll-table {
+	display: block;
+	height: 350px;
+	overflow: auto;
+}
+
+.readonlyField {
+	border-width: 2px; 
+	border-style: inset; 
+	border-color: black gray gray black; 
+	background-color: rgb(240,240,240);
+}
+
+#pageHeader {
+	grid-area: A;
+}
+
+#dataArea {
+	grid-area: B;
+}
+
+#serviceArea {
+	grid-area: C;
+}
+
+#pageFooter {
+	grid-area: D;
+}
+
+button {
+	font-size: 17px;
+	background: #d6d8d6;
+	border-bottom-width: 4px;
+	border-color: #b2b2b2;
+	border-radius: 3px;
+}
+
+body {
+	margin: 0px;
+}
+
+input {
+	font-size: 12pt; 
+	font-family: 'Times New Roman', Times, serif;
+}
+
+textarea {
+	font-size: 12pt; 
+	font-family: 'Times New Roman', Times, serif;
+}
+
+td > textarea {
+	border: none;
+	background: #ffffc8;
+}

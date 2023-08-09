@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Note Card</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+	<div class="grid">
+		
+		<div class="block" id="pageHeader">HEADER</div>
+		
+		<div class="areaForData" id="dataArea">
+			<h2>Создание новой заметки</h2>
+			
+			<form th:method="post" th:action="@{/notes-list}" th:object="${note}">
+				<!-- <input type="hidden" name="_csrf" th:value="${_csrf.token}"> -->
+				
+				<label for="name">Название.........:</label>
+				<input type="text" th:field="*{name}">
+				<div style="color:red" 
+					th:if="${#fields.hasErrors('name')}"
+					th:errors="*{name}">Error text</div>
+				<br><br>
+				
+				<label for="description" style="vertical-align: top;">Описание........:</label>
+				<textarea rows="4" cols="50" th:field="*{description}"></textarea>
+				<div style="color:red" 
+					th:if="${#fields.hasErrors('description')}"
+					th:errors="*{description}">Error text</div>
+				<br><br>
+				
+				<label for="createdAt">Дата создания.:</label>
+				<input class="readonlyField" readonly 
+						type="text" th:field="*{createdAt}">
+				<br><br>
+				
+				<button>Сохранить заметку</button>
+			</form>
+		</div>
+		
+		<div class="block" id="serviceArea">SERVICE
+			<br><br><b><a th:href="@{/notes-list}">Вернуться в заметки ...</a></b>
+		</div>
+		
+		<div class="block" id="pageFooter">FOOTER</div>
+		
+	</div>
+</body>
+
+</html>
