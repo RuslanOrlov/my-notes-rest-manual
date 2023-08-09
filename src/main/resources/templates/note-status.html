@@ -19,7 +19,7 @@
 			<form th:method="patch" th:action="@{/notes-list/status}" th:object="${note}">
 				<!-- <input type="hidden" name="_csrf" th:value="${_csrf.token}"> -->
 				
-				<label for="name">Id........................:</label>
+				<label for="id">Id........................:</label>
 				<input class="readonlyField" readonly type="text" th:field="*{id}">
 				<br><br>
 				
@@ -27,21 +27,22 @@
 				<input class="readonlyField" readonly type="text" th:field="*{name}">
 				<br><br>
 				
-				<label for="type">Описание...........:</label>
-				<input class="readonlyField" readonly type="text" th:field="*{description}">
+				<label for="description" style="vertical-align: top;">Описание...........:</label>
+				<textarea rows="4" cols="50" th:text="*{description}" 
+						  class="readonlyField" readonly ></textarea>
 				<br><br>
 				
-				<label for="type">Статус................:</label>
+				<label for="isDeleted">Статус................:</label>
 				<input type="checkbox" th:field="*{isDeleted}">
 				<span style="padding-left: 10px; color: darkblue;">
 					(включенный статус означает логическое удаление записи)</span>
 				<br><br>
 				
-				<label for="type">Дата создания...:</label>
+				<label for="createdAt">Дата создания...:</label>
 				<input class="readonlyField" readonly type="text" th:field="*{createdAt}">
 				<br><br>
 				
-				<label for="type">Дата изменения.:</label>
+				<label for="updatedAt">Дата изменения.:</label>
 				<input class="readonlyField" readonly type="text" th:field="*{updatedAt}">
 				<br><br>
 				
