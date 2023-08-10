@@ -83,8 +83,8 @@
 													${note.getName().substring(0, 12)} + '...' : 
 													${note.getName()})">
 						<td th:text="${note.getIsDeleted()} ? 'удалена' : 'активна'">
-						<td th:text="${#temporals.format(note.getCreatedAt(),  'dd-MM-yyyy HH:mm')}">
-						<td th:text="${#temporals.format(note.getUpdatedAt(),  'dd-MM-yyyy HH:mm')}">
+						<td th:text="${#temporals.format(note.getCreatedAt(),  'dd-MM-yyyy HH:mm:ss')}">
+						<td th:text="${#temporals.format(note.getUpdatedAt(),  'dd-MM-yyyy HH:mm:ss')}">
 						<td> 
 							<a th:href="@{/notes-list/{id}(id=${note.getId()})}">Открыть</a>
 						</td>

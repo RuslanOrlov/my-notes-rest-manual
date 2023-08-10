@@ -3,7 +3,9 @@ package notes.controllers;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -215,6 +217,14 @@ public class NotesController {
 		return "note-edit";
 	}
 	
+	// Эта первая версия метода patchNote сохраняет изменения в заметке (в объекте Note): 
+	// - Для этого сначала создается промежуточный объект Note, полям которого 
+	//   присваиваются изменения полей исходного объекта Note, пришедшие из формы 
+	//   "note-edit". Также для сохранения даты и времени изменения в промежуточном 
+	//   объекте запоминается значение для поля updatedAt. 
+	// - Далее этот промежуточный объект с изменениями передается в Rest клиент с помощью 
+	//   метода patchNote() Rest клиента. 
+	/*
 	@PatchMapping
 	public String patchNote(@Valid Note note, BindingResult errors) {
 		if (errors.hasErrors()) 
@@ -231,6 +241,32 @@ public class NotesController {
 		this.restClientNotes.patchNote(patch, note.getId());
 		
 		return "redirect:/notes-list";
+	}*/
+	
+	// Эта вторая версия метода patchNote сохраняет изменения в заметке (в объекте Note): 
+	// - Для этого сначала создается промежуточный ассоциативный массив Map, в который 
+	//   добавляются пары значений с изменениями полей исходного объекта Note, пришедшие 
+	//   из формы "note-edit". Также для сохранения даты и времени изменения в промежуточном 
+	//   ассоциативном массиве Map запоминается значение для поля updatedAt в формате 
+	//   текста (для корректной передачи значения LocalDateTime). 
+	// - Далее этот промежуточный Map с изменениями передается в Rest клиент с помощью 
+	//   метода patchNote() Rest клиента. 
+	@PatchMapping
+	public String patchNote(@Valid Note note, BindingResult errors) {
+		if (errors.hasErrors()) 
+			return "note-edit";
+		
+		Map<String, Object> patch = new HashMap<>();
+		
+		if (note.getName() != null && note.getName().trim().length() > 0)
+			patch.put("name", note.getName().trim());
+		if (note.getDescription() != null && note.getDescription().trim().length() > 0)
+			patch.put("description", note.getDescription().trim());
+		patch.put("updatedAt", note.getUpdatedAt().toString());
+		
+		this.restClientNotes.patchNote(patch, note.getId());
+		
+		return "redirect:/notes-list";
 	}
 	
 	@GetMapping("/{id}/status")
@@ -241,12 +277,43 @@ public class NotesController {
 		return "note-status";
 	}
 	
+	// Эта первая версия метода patchNoteStatus сохраняет изменения в статусе заметки 
+	// (в статусе объекта Note): 
+	// - Для этого сначала создается промежуточный объект Note, полю isDeleted 
+	//   которого присваивается изменение, пришедшее из формы "note-status". Также 
+	//   для сохранения даты и времени изменения в промежуточном объекте запоминается 
+	//   значение для поля updatedAt. 
+	// - Далее этот промежуточный объект с изменениями передается в Rest клиент с помощью 
+	//   метода patchNote() Rest клиента. 
+	/*
 	@PatchMapping("/status")
 	public String patchNoteStatus(Note note) {
 		Note patch = new Note(null, null, null, null, null, null);
 		
 		patch.setIsDeleted(note.getIsDeleted());
 		patch.setUpdatedAt(note.getUpdatedAt());
+		
+		this.restClientNotes.patchNote(patch, note.getId());
+		
+		return "redirect:/notes-list";
+	}*/
+	
+	
+	// Эта вторая версия метода patchNoteStatus сохраняет изменения в статусе заметки 
+	// (в статусе объекта Note): 
+	// - Для этого сначала создается промежуточный ассоциативный массив Map, в который 
+	//   добавляется пара значений с изменением поля isDeleted, пришедшим из формы 
+	//   "note-status". Также для сохранения даты и времени изменения в промежуточном 
+	//   ассоциативном массиве Map запоминается значение для поля updatedAt в формате 
+	//   текста (для корректной передачи значения LocalDateTime). 
+	// - Далее этот промежуточный Map с изменениями передается в Rest клиент с помощью 
+	//   метода patchNote() Rest клиента. 
+	@PatchMapping("/status")
+	public String patchNoteStatus(Note note) {
+		Map<String, Object> patch = new HashMap<>();
+		
+		patch.put("isDeleted", note.getIsDeleted());
+		patch.put("updatedAt", note.getUpdatedAt().toString());
 		
 		this.restClientNotes.patchNote(patch, note.getId());
 		

@@ -3,6 +3,7 @@ package notes.rest.client;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
@@ -163,12 +164,45 @@ public class RestClientNotes {
 		return null;
 	}
 	
+	// Это первая версия метода patchNote, которая получает от контроллера MVC 
+	// промежуточный объект Note с изменениями редактирования исходного объекта 
+	// - И ДАЛЕЕ направляет PATCH запрос с этим промежуточным объектом в REST 
+	//   контроллер по указанному URL для сохранения изменений в исходном объекте 
+	//   Note в БД
+	// - И ДАЛЕЕ получает от REST контроллера ответ с обновленным в БД исходным 
+	//   объектом Note. 
+	/*
 	public Note patchNote(Note patch, Long id) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		
 		HttpEntity<Note> requestEntity = 
 				new HttpEntity<Note>(patch, httpHeaders);
+		
+		ResponseEntity<Note> responseEntity = 
+				this.restTemplate.exchange(this.urlWithId, HttpMethod.PATCH, 
+						requestEntity, Note.class, id);
+		
+		if (responseEntity.getStatusCode().is2xxSuccessful()) {
+			return responseEntity.getBody();
+		}
+		return null;
+	}*/
+
+	// Это вторая версия метода patchNote, которая получает от контроллера MVC 
+	// промежуточный ассоциативный массив Map с изменениями редактирования исходного 
+	// объекта 
+	// - И ДАЛЕЕ направляет PATCH запрос с этим промежуточным ассоциативным массивом 
+	//   Map в REST контроллер по указанному URL для сохранения изменений в исходном 
+	//   объекте Note в БД
+	// - И ДАЛЕЕ получает от REST контроллера ответ с обновленным в БД исходным 
+	//   объектом Note. 
+	public Note patchNote(Map<String, Object> patch, Long id) {
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity<Map<String, Object>> requestEntity = 
+				new HttpEntity<Map<String, Object>>(patch, httpHeaders);
 		
 		ResponseEntity<Note> responseEntity = 
 				this.restTemplate.exchange(this.urlWithId, HttpMethod.PATCH, 

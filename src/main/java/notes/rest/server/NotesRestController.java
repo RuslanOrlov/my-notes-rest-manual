@@ -1,6 +1,8 @@
 package notes.rest.server;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +84,14 @@ public class NotesRestController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(this.notesRepository.save(note));
 	}
 	
+	// Это первая версия метода patchNote, которая: 
+	// - получает от REST контроллера PATCH запрос с промежуточным объектом Note, 
+	//   содержащим изменения редактирования исходного объекта Note; 
+	// - далее извлекает из БД исходный объект Note по его id и присваивает его 
+	//   полям НЕНУЛЕВЫЕ значения соответствующих полей промежуточного объекта Note; 
+	// - далее сохраняет изменения исходного объекта в БД и возвращает его в REST 
+	//   контроллер. 
+	/*
 	@PatchMapping(path = "/{id}", consumes = "application/json")
 	public ResponseEntity<Note> patchNote(@PathVariable Long id, 
 										@RequestBody Note patch) {
@@ -101,6 +111,38 @@ public class NotesRestController {
 			note.setDescription(patch.getDescription().trim());
 		}
 		note.setUpdatedAt(patch.getUpdatedAt());
+		
+		return ResponseEntity.ok(this.notesRepository.save(note));
+	}*/
+
+	// Это вторая версия метода patchNote, которая: 
+	// - получает от REST контроллера PATCH запрос с промежуточным ассоциативным 
+	//   массивом Map, содержащим изменения редактирования исходного объекта Note; 
+	// - далее извлекает из БД исходный объект Note по его id и присваивает его 
+	//   полям НЕНУЛЕВЫЕ значения из ассоциативного массива Map с соответствующими 
+	//   значениями ключей (преобразуя полученное текстовое значение поля даты и 
+	//   времени изменения в LocalDateTime); 
+	// - далее сохраняет изменения исходного объекта в БД и возвращает его в REST 
+	//   контроллер. 
+	@PatchMapping(path = "/{id}", consumes = "application/json")
+	public ResponseEntity<Note> patchNote(@PathVariable Long id, 
+										@RequestBody Map<String, Object> patch) {
+		Note note = this.notesRepository.findById(id).orElse(null);
+		
+		if (note == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
+		
+		if (patch.get("isDeleted") != null) {
+			note.setIsDeleted( (Boolean) patch.get("isDeleted"));
+		}
+		if (patch.get("name") != null && ( (String) patch.get("name")).length() > 0) {
+			note.setName( (String) patch.get("name"));
+		}
+		if (patch.get("description") != null && ( (String) patch.get("description")).length() > 0) {
+			note.setDescription( (String) patch.get("description"));
+		}
+		note.setUpdatedAt(LocalDateTime.parse( (String) patch.get("updatedAt")));
 		
 		return ResponseEntity.ok(this.notesRepository.save(note));
 	}
