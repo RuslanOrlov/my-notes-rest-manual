@@ -98,7 +98,7 @@ public class PDFGenerator {
 		table.addCell(cell);
 		
 		// Создать  форматтер для форматирования даты и времени в нужный формат 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-mm-yyyy hh:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 		
 		// Пройти по коллекции заметок и построчно добавить их в таблицу
 		for (Note note : notes) {
