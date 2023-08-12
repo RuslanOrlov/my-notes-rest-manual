@@ -1,5 +1,5 @@
 create table if not exists notes (
-	id 					bigint not null primary key,
+	id 					serial primary key,
 	name 				varchar(255),
 	description 		varchar(255),
 	is_deleted 			boolean,
